@@ -62,6 +62,28 @@ obp-frontend   obp-frontend-chrisjsimpson-dev.apps.sandbox-m2.ll9k.p1.openshifta
 
 You may then choose to configure your DNS, adding a `CNAME` for the generated route to the app web frontend.
 
+### How do I *test* using my own webaddress?
+
+1. Get & note down the existing application route name `oc get route` (e.g `obp-frontend-chrisjsimpson-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com`) 
+2. Delete the existing route resource (they are immutable): `oc delete -f route.yaml`
+3. Add your `host` to `route.yaml` (for example if you are `example.com` and you want
+   to setup `obp-api.example.com`:
+
+```
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: obp-frontend
+spec:
+  host: obp-api.example.com
+  to:
+    kind: Service
+    name: obpapi-service
+```
+
+4. Set your DNS CNAME record to point to the old application route name: e.g. `obp-api.example.com IN CNAME obp-frontend-chrisjsimpson-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com`
+5. Apply `oc apply -f route.yaml`
+
 
 # Deploy OBP API to your local development environment
 
