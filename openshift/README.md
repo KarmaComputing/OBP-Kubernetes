@@ -20,7 +20,7 @@ For that to work, configure your terminal to use `oc` CLI against your Openshift
 
 ### Errors: random uuid
 
-tldr: 
+tldr: https://github.com/KarmaComputing/OBP-API/issues/9
 
 1. Fix containers uuid handling using [this example](https://github.com/chrisjsimpson/obp-kubernetes/blob/openshiftcompatibility/entrypoint.sh#L1-L13).
 2. See [fully working obp-api openshift container](index.docker.io/chrisjsimpson/obpapi-kube) example
