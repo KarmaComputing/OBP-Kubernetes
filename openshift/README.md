@@ -20,7 +20,7 @@ For that to work, configure your terminal to use `oc` CLI against your Openshift
 
 # Deploy OBP-API to your OpenShift Cluster
 
-1. Ensure your secrets are configured as intended (see `obp.yaml`)
+1. Ensure your secrets are configured as intended (see [`obp.yaml`](#openshift/obp.yaml))
 2. Apply the OBP manifest(s) to your k8s cluster
 
 A quickstart valid OBP-API deployment manifest is provided: 
@@ -34,6 +34,33 @@ Validate:
 ```
 oc get pods
 ```
+
+## Configure routing to web interface
+
+This will generate a frontent url for your app, which you may then use as a DNS `CNAME`
+for ingress traffic.
+
+> Openshift doesn't appear to use the [standard](https://xkcd.com/927/) Kubernetes [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) way of defining routes to applications, and uses a ["`kind: Reoute`" concept instead](https://cloud.redhat.com/blog/kubernetes-ingress-vs-openshift-route). Therefore we provide a special `route.yaml` for special OpenShift:
+
+Apply the route:
+```
+oc apply -f route.yaml 
+route.route.openshift.io/obp-frontend created
+```
+
+View the assigned route address: 
+```
+oc get route obp-frontend
+```
+
+Example output:
+
+```
+NAME           HOST/PORT                                                                  PATH   SERVICES         PORT    TERMINATION   WILDCARD
+obp-frontend   obp-frontend-chrisjsimpson-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com          obpapi-service   <all>                 None
+```
+
+You may then choose to configure your DNS, adding a `CNAME` for the generated route to the app web frontend.
 
 
 # Deploy OBP API to your local development environment
