@@ -18,34 +18,6 @@ For that to work, configure your terminal to use `oc` CLI against your Openshift
 
 > Verbose cli login details: To log in using the CLI, collect your token from the web console’s Command Line page, which is accessed from Command Line Tools in the Help menu. The token is hidden, so you must click the copy to clipboard button at the end of the oc login line on the Command Line Tools page, then paste the copied contents to show the token. [Official docs](https://docs.openshift.com/container-platform/3.11/cli_reference/get_started_cli.html#cli-reference-get-started-cli)
 
-### Errors: random uuid
-
-tldr: https://github.com/KarmaComputing/OBP-API/issues/9
-
-1. Fix containers uuid handling using [this example](https://github.com/chrisjsimpson/obp-kubernetes/blob/openshiftcompatibility/entrypoint.sh#L1-L13).
-2. See [fully working obp-api openshift container](index.docker.io/chrisjsimpson/obpapi-kube) example
-3. Historical context see: [Building Non Root Docker Images OpenShift](https://blog.karmacomputing.co.uk/building-non-root-docker-images-openshift/), and [Openshift will not run your container as a root user](https://number1.co.za/openshift-will-not-run-your-container-as-a-root-user/)
-
-
-Detail:
-
-The current OBP-API docker images will not run on Openshift deployed custers. An example image which does is available at:
-[dockerhub](index.docker.io/chrisjsimpson/obpapi-kube), and the [code reference which handles the random uid scenario in OpenShift clusters](https://github.com/chrisjsimpson/obp-kubernetes/blob/openshiftcompatibility/entrypoint.sh#L1-L13).
-
-
-
-```
- OBP openshift ATM  Postgress curl (time sink: cluster registry permissions/access) undocumented use of generate-jetty-start.sh in unknown repo, perhaps refers to image: index.docker.io/tawoe/obp-api however the tags are undocumented (tag "hw" exists and is most recently modified but no information, "lastest" tag is 9 days go) Neither will run on a production Openshift cluster chrisjsimpson/obpapi-kube will.
-
-
-********************************************************************
-WARNING: User is 1012560000
-         The user should be (re)set to 'jetty' in the Dockerfile
-********************************************************************
-/generate-jetty-start.sh: 10: cannot create /var/lib/jetty/jetty.start: Permission denied
-jetty dry run failed:
-```
-
 # Deploy OBP-API to your OpenShift Cluster
 
 1. Ensure your secrets are configured as intended (see `obp.yaml`)
@@ -101,4 +73,34 @@ eval $(crc podman-env)
 ```
 git clone https://github.com/KarmaComputing/OBP-API.git
 cd OBP-API
+```
+
+# Troubleshooting
+
+### Errors: random uuid
+
+tldr: https://github.com/KarmaComputing/OBP-API/issues/9
+
+1. Fix containers uuid handling using [this example](https://github.com/chrisjsimpson/obp-kubernetes/blob/openshiftcompatibility/entrypoint.sh#L1-L13).
+2. See [fully working obp-api openshift container](index.docker.io/chrisjsimpson/obpapi-kube) example
+3. Historical context see: [Building Non Root Docker Images OpenShift](https://blog.karmacomputing.co.uk/building-non-root-docker-images-openshift/), and [Openshift will not run your container as a root user](https://number1.co.za/openshift-will-not-run-your-container-as-a-root-user/)
+
+
+Detail:
+
+The current OBP-API docker images will not run on Openshift deployed custers. An example image which does is available at:
+[dockerhub](index.docker.io/chrisjsimpson/obpapi-kube), and the [code reference which handles the random uid scenario in OpenShift clusters](https://github.com/chrisjsimpson/obp-kubernetes/blob/openshiftcompatibility/entrypoint.sh#L1-L13).
+
+
+
+```
+ OBP openshift ATM  Postgress curl (time sink: cluster registry permissions/access) undocumented use of generate-jetty-start.sh in unknown repo, perhaps refers to image: index.docker.io/tawoe/obp-api however the tags are undocumented (tag "hw" exists and is most recently modified but no information, "lastest" tag is 9 days go) Neither will run on a production Openshift cluster chrisjsimpson/obpapi-kube will.
+
+
+********************************************************************
+WARNING: User is 1012560000
+         The user should be (re)set to 'jetty' in the Dockerfile
+********************************************************************
+/generate-jetty-start.sh: 10: cannot create /var/lib/jetty/jetty.start: Permission denied
+jetty dry run failed:
 ```
